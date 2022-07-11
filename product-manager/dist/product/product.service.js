@@ -24,6 +24,19 @@ let ProductService = class ProductService {
         const createdProduct = new this.productModel(createProductDto);
         return createdProduct.save();
     }
+    async list() {
+        return await this.productModel.find().populate({
+            path: 'category',
+        });
+    }
+    async update(createProductDto, id) {
+        const updatedProduct = await this.productModel.findByIdAndUpdate(id, createProductDto, { new: true });
+        return updatedProduct;
+    }
+    async delete(id) {
+        const deletedProduct = await this.productModel.findByIdAndRemove(id);
+        return deletedProduct;
+    }
 };
 ProductService = __decorate([
     (0, common_1.Injectable)(),

@@ -14,5 +14,23 @@ export class ProductService {
     return createdProduct.save();
   }
 
+  async list(): Promise<Product[]> {
+    return await this.productModel.find().populate({
+      path: 'category',
+    });
+  }
 
+  async update(createProductDto: CreateProductDto,id :string): Promise<Product> {
+    const updatedProduct = await this.productModel.findByIdAndUpdate(
+      id,
+      createProductDto,
+      { new: true },
+    );
+    return updatedProduct;
+  }
+
+  async delete(id: string): Promise<Product> {
+    const deletedProduct = await this.productModel.findByIdAndRemove(id);
+    return deletedProduct;
+  }
 }

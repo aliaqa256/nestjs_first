@@ -5,4 +5,7 @@ export declare class ProductController {
     private productService;
     constructor(productService: ProductService);
     create(createProductDto: CreateProductDto): Promise<Product>;
+    list(): Promise<Product[]>;
+    update(createProductDto: CreateProductDto, id: any): Promise<Product>;
+    delete(id: any): Promise<Product>;
 }
