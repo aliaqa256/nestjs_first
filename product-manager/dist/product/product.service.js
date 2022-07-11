@@ -37,6 +37,32 @@ let ProductService = class ProductService {
         const deletedProduct = await this.productModel.findByIdAndRemove(id);
         return deletedProduct;
     }
+    async getCountByCat() {
+        return await this.productModel
+            .aggregate([
+            {
+                $group: {
+                    _id: '$category',
+                    count: { $sum: 1 },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'category',
+                },
+            },
+            {
+                $unwind: '$category',
+            },
+        ])
+            .sort({ count: -1 });
+    }
+    async getByDetail(key, value) {
+        return await this.productModel.find({ details: { $elemMatch: { key: value } } });
+    }
 };
 ProductService = __decorate([
     (0, common_1.Injectable)(),

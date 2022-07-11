@@ -29,4 +29,21 @@ export class ProductController {
   async delete(@Param('id') id): Promise<Product> {
     return this.productService.delete(id);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('cat-count/')
+  async getCountByCat(): Promise<Product[]> {
+    return this.productService.getCountByCat();
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('by-detail/:key/:value')
+  async getByDetail(
+    @Param('key') key,
+    @Param('value') value,
+  ): Promise<Product[]> {
+    return this.productService.getByDetail(key, value);
+  }
+
+
 }

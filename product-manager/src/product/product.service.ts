@@ -20,7 +20,10 @@ export class ProductService {
     });
   }
 
-  async update(createProductDto: CreateProductDto,id :string): Promise<Product> {
+  async update(
+    createProductDto: CreateProductDto,
+    id: string,
+  ): Promise<Product> {
     const updatedProduct = await this.productModel.findByIdAndUpdate(
       id,
       createProductDto,
@@ -32,5 +35,33 @@ export class ProductService {
   async delete(id: string): Promise<Product> {
     const deletedProduct = await this.productModel.findByIdAndRemove(id);
     return deletedProduct;
+  }
+
+  async getCountByCat(): Promise<Product[]> {
+    return await this.productModel
+      .aggregate([
+        {
+          $group: {
+            _id: '$category',
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $lookup: {
+            from: 'categories',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'category',
+          },
+        },
+        {
+          $unwind: '$category',
+        },
+      ])
+      .sort({ count: -1 });
+  }
+
+  async getByDetail(key,value) : Promise<Product[]> {
+    return await this.productModel.find({details: {$elemMatch: {key: value}}});
   }
 }

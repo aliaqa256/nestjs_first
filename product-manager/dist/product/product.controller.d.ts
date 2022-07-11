@@ -8,4 +8,6 @@ export declare class ProductController {
     list(): Promise<Product[]>;
     update(createProductDto: CreateProductDto, id: any): Promise<Product>;
     delete(id: any): Promise<Product>;
+    getCountByCat(): Promise<Product[]>;
+    getByDetail(key: any, value: any): Promise<Product[]>;
 }
