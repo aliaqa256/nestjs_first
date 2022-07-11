@@ -45,5 +45,10 @@ export class ProductController {
     return this.productService.getByDetail(key, value);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('detail/:id')
+  async detailView(@Param('id') id): Promise<Product> {
+    return this.productService.detailView(id);
+  }
 
 }

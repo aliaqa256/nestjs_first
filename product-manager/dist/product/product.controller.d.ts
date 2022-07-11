@@ -10,4 +10,5 @@ export declare class ProductController {
     delete(id: any): Promise<Product>;
     getCountByCat(): Promise<Product[]>;
     getByDetail(key: any, value: any): Promise<Product[]>;
+    detailView(id: any): Promise<Product>;
 }

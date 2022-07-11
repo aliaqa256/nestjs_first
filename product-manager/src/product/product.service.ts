@@ -7,9 +7,34 @@ import { Product, ProductDocument } from './schemas/product.schema';
 export class ProductService {
   constructor(
     @InjectModel('Product') private productModel: Model<ProductDocument>,
+    @InjectModel('Translation') private translationModel: Model<ProductDocument>,
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
+    // get the details
+    const new_details = createProductDto.details;
+    new_details.forEach(async (detail) => {
+      const translation = this.translationModel.findOne({
+        persian: detail.key,
+      });
+
+      if (translation) {
+        detail.key = translation['english'];
+      }
+
+      const translation2 = await this.translationModel.findOne({
+        persian: detail.value,
+      });
+
+      if (translation2) {
+        detail.value = translation2['english'];
+      }
+    });
+
+    createProductDto['details'] = new_details;
+ 
+
+
     const createdProduct = new this.productModel(createProductDto);
     return createdProduct.save();
   }
@@ -62,6 +87,45 @@ export class ProductService {
   }
 
   async getByDetail(key,value) : Promise<Product[]> {
-    return await this.productModel.find({details: {$elemMatch: {key: value}}});
+    return await this.productModel.find({
+      details: { $elemMatch: { key: key , value: value} },
+    });
   }
+
+  async detailView(id: string): Promise<Product> {
+    const product = await this.productModel.findOne({
+      _id: id,
+    });
+
+    // get the details
+    const new_details = product.details;
+    new_details.forEach(async (detail) => {
+      const translation = await this.translationModel.findOne({
+        english: detail.key,
+      });
+
+      if (translation) {
+        detail.key = translation['persian'];
+      }
+
+      const translation2 = await this.translationModel.findOne({
+        english: detail.value,
+      });
+
+      if (translation2) {
+        detail.value = translation2['persian'];
+      }
+    });
+
+    product['details'] = new_details;
+
+    return product;
+
+  }
+
+  
+  
+
+
+
 }

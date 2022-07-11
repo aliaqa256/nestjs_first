@@ -17,10 +17,27 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 let ProductService = class ProductService {
-    constructor(productModel) {
+    constructor(productModel, translationModel) {
         this.productModel = productModel;
+        this.translationModel = translationModel;
     }
     async create(createProductDto) {
+        const new_details = createProductDto.details;
+        new_details.forEach(async (detail) => {
+            const translation = this.translationModel.findOne({
+                persian: detail.key,
+            });
+            if (translation) {
+                detail.key = translation['english'];
+            }
+            const translation2 = await this.translationModel.findOne({
+                persian: detail.value,
+            });
+            if (translation2) {
+                detail.value = translation2['english'];
+            }
+        });
+        createProductDto['details'] = new_details;
         const createdProduct = new this.productModel(createProductDto);
         return createdProduct.save();
     }
@@ -61,13 +78,39 @@ let ProductService = class ProductService {
             .sort({ count: -1 });
     }
     async getByDetail(key, value) {
-        return await this.productModel.find({ details: { $elemMatch: { key: value } } });
+        return await this.productModel.find({
+            details: { $elemMatch: { key: key, value: value } },
+        });
+    }
+    async detailView(id) {
+        const product = await this.productModel.findOne({
+            _id: id,
+        });
+        const new_details = product.details;
+        new_details.forEach(async (detail) => {
+            const translation = await this.translationModel.findOne({
+                english: detail.key,
+            });
+            if (translation) {
+                detail.key = translation['persian'];
+            }
+            const translation2 = await this.translationModel.findOne({
+                english: detail.value,
+            });
+            if (translation2) {
+                detail.value = translation2['persian'];
+            }
+        });
+        product['details'] = new_details;
+        return product;
     }
 };
 ProductService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)('Product')),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, mongoose_1.InjectModel)('Translation')),
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Model])
 ], ProductService);
 exports.ProductService = ProductService;
 //# sourceMappingURL=product.service.js.map
