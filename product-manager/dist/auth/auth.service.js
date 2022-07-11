@@ -17,17 +17,19 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const argon = require("argon2");
+const jwt_1 = require("@nestjs/jwt");
 let AuthService = class AuthService {
-    constructor(authModel) {
+    constructor(authModel, jwt) {
         this.authModel = authModel;
+        this.jwt = jwt;
     }
     async signup(createAuthDto) {
         const hash = await argon.hash(createAuthDto.password);
         const createdAuth = new this.authModel(Object.assign(Object.assign({}, createAuthDto), { password: hash }));
         return createdAuth.save();
     }
-    signin(createAuthDto) {
-        const user = this.authModel.findOne({ email: createAuthDto.email });
+    async signin(createAuthDto) {
+        const user = await this.authModel.findOne({ email: createAuthDto.email });
         if (!user) {
             throw new common_1.ForbiddenException('Invalid credentials');
         }
@@ -35,13 +37,26 @@ let AuthService = class AuthService {
         if (!isValid) {
             throw new common_1.ForbiddenException('Invalid credentials');
         }
-        return user;
+        return await this.signToken(user['_id'], user['email'], user['is_superuser']);
+    }
+    async signToken(userid, email, is_superuser) {
+        if (is_superuser == undefined) {
+            is_superuser = false;
+        }
+        const payload = {
+            userid,
+            email,
+            is_superuser,
+        };
+        const token = await this.jwt.signAsync(payload, { expiresIn: '1h', secret: 'secret' });
+        return { token };
     }
 };
 AuthService = __decorate([
     (0, common_1.Injectable)({}),
     __param(0, (0, mongoose_1.InjectModel)('Auth')),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        jwt_1.JwtService])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map
