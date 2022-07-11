@@ -12,12 +12,13 @@ const product_controller_1 = require("./product.controller");
 const product_service_1 = require("./product.service");
 const product_schema_1 = require("./schemas/product.schema");
 const mongoose_1 = require("@nestjs/mongoose");
+const translation_schema_1 = require("../translation/schemas/translation.schema");
 let ProductModule = class ProductModule {
 };
 ProductModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: 'Product', schema: product_schema_1.ProductSchema }]),
+            mongoose_1.MongooseModule.forFeature([{ name: 'Product', schema: product_schema_1.ProductSchema }, { name: 'Translation', schema: translation_schema_1.TranslationSchema }]),
         ],
         controllers: [product_controller_1.ProductController],
         providers: [product_service_1.ProductService],

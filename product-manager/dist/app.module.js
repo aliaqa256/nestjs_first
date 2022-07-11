@@ -13,7 +13,6 @@ const product_module_1 = require("./product/product.module");
 const user_module_1 = require("./user/user.module");
 const mongoose_1 = require("@nestjs/mongoose");
 const category_module_1 = require("./category/category.module");
-const translation_module_1 = require("./translation/translation.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -24,7 +23,6 @@ AppModule = __decorate([
             user_module_1.UserModule,
             mongoose_1.MongooseModule.forRoot('mongodb://localhost/nest'),
             category_module_1.CategoryModule,
-            translation_module_1.TranslationModule,
         ],
         controllers: [],
         providers: [],

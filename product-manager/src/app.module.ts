@@ -13,7 +13,6 @@ import { TranslationModule } from './translation/translation.module';
     UserModule,
     MongooseModule.forRoot('mongodb://localhost/nest'),
     CategoryModule,
-    TranslationModule,
   ],
   controllers: [],
   providers: [],

@@ -7,12 +7,12 @@ import { Translation, TranslationDocument } from './schemas/translation.schema';
 @Injectable()
 export class TranslationService {
   constructor(
-    @InjectModel('Translation') private productModel: Model<TranslationDocument>,
+    @InjectModel('Translation') private translationModel: Model<TranslationDocument>,
   ) {}
 
 
   async create(createTranslationDto: CreateTranslationDto): Promise<Translation> {
-    const createdTranslation = new this.productModel(createTranslationDto);
+    const createdTranslation = new this.translationModel(createTranslationDto);
     return createdTranslation.save();
   }
 

@@ -17,11 +17,11 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 let TranslationService = class TranslationService {
-    constructor(productModel) {
-        this.productModel = productModel;
+    constructor(translationModel) {
+        this.translationModel = translationModel;
     }
     async create(createTranslationDto) {
-        const createdTranslation = new this.productModel(createTranslationDto);
+        const createdTranslation = new this.translationModel(createTranslationDto);
         return createdTranslation.save();
     }
 };
