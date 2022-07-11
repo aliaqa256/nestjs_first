@@ -4,6 +4,7 @@ import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoryModule } from './category/category.module';
+import { TranslationModule } from './translation/translation.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CategoryModule } from './category/category.module';
     UserModule,
     MongooseModule.forRoot('mongodb://localhost/nest'),
     CategoryModule,
+    TranslationModule,
   ],
   controllers: [],
   providers: [],
