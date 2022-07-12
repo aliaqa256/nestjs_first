@@ -24,9 +24,16 @@ let AuthService = class AuthService {
         this.jwt = jwt;
     }
     async signup(createAuthDto) {
+        const auth = await this.authModel.findOne({
+            email: createAuthDto.email,
+        });
+        if (auth) {
+            throw new common_1.ForbiddenException('user  already exists');
+        }
         const hash = await argon.hash(createAuthDto.password);
         const createdAuth = new this.authModel(Object.assign(Object.assign({}, createAuthDto), { password: hash }));
-        return createdAuth.save();
+        const user = createdAuth.save();
+        return { created: true };
     }
     async signin(createAuthDto) {
         const user = await this.authModel.findOne({ email: createAuthDto.email });
@@ -48,7 +55,10 @@ let AuthService = class AuthService {
             email,
             is_superuser,
         };
-        const token = await this.jwt.signAsync(payload, { expiresIn: '1h', secret: 'secret' });
+        const token = await this.jwt.signAsync(payload, {
+            expiresIn: '1h',
+            secret: 'secret',
+        });
         return { token };
     }
 };

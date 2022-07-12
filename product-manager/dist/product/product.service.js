@@ -22,22 +22,34 @@ let ProductService = class ProductService {
         this.translationModel = translationModel;
     }
     async create(createProductDto) {
-        const new_details = createProductDto.details;
-        new_details.forEach(async (detail) => {
-            const translation = this.translationModel.findOne({
-                persian: detail.key,
+        let new_dict = {};
+        for (let key in createProductDto.details) {
+            const translationKey = await this.translationModel.findOne({
+                persian: key,
             });
-            if (translation) {
-                detail.key = translation['english'];
-            }
-            const translation2 = await this.translationModel.findOne({
-                persian: detail.value,
+            const translationValue = await this.translationModel.findOne({
+                persian: createProductDto.details[key],
             });
-            if (translation2) {
-                detail.value = translation2['english'];
+            if (translationKey && translationValue) {
+                new_dict[translationKey['english']] = translationValue['english'];
             }
+            else if (translationKey && !translationValue) {
+                new_dict[translationKey['english']] = createProductDto.details[key];
+            }
+            else if (!translationKey && translationValue) {
+                new_dict[key] = translationValue['english'];
+            }
+            else {
+                new_dict[key] = createProductDto.details[key];
+            }
+        }
+        createProductDto.details = new_dict;
+        const product = await this.productModel.findOne({
+            name: createProductDto.name,
         });
-        createProductDto['details'] = new_details;
+        if (product) {
+            throw new common_1.ForbiddenException('Product already exists');
+        }
         const createdProduct = new this.productModel(createProductDto);
         return createdProduct.save();
     }
@@ -86,22 +98,28 @@ let ProductService = class ProductService {
         const product = await this.productModel.findOne({
             _id: id,
         });
-        const new_details = product.details;
-        new_details.forEach(async (detail) => {
-            const translation = await this.translationModel.findOne({
-                english: detail.key,
+        let new_dict = {};
+        for (let key in product.details) {
+            const translationKey = await this.translationModel.findOne({
+                english: key,
             });
-            if (translation) {
-                detail.key = translation['persian'];
-            }
-            const translation2 = await this.translationModel.findOne({
-                english: detail.value,
+            const translationValue = await this.translationModel.findOne({
+                english: product.details[key],
             });
-            if (translation2) {
-                detail.value = translation2['persian'];
+            if (translationKey && translationValue) {
+                new_dict[translationKey['persian']] = translationValue['persian'];
             }
-        });
-        product['details'] = new_details;
+            else if (translationKey && !translationValue) {
+                new_dict[translationKey['persian']] = product.details[key];
+            }
+            else if (!translationKey && translationValue) {
+                new_dict[key] = translationValue['persian'];
+            }
+            else {
+                new_dict[key] = product.details[key];
+            }
+        }
+        product.details = new_dict;
         return product;
     }
 };

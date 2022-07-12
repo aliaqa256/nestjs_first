@@ -8,10 +8,11 @@ import { TranslationService } from './translation.service';
 export class TranslationController {
   constructor(private translationService: TranslationService) {}
 
-    @UseGuards(AuthGuard('jwt'))
-    @Post('create')
-    async create(@Body() createTranslationDto: CreateTranslationDto): Promise<Translation> {
-        return this.translationService.create(createTranslationDto);
-        }
-
+  @UseGuards(AuthGuard('jwt'))
+  @Post('create')
+  async create(
+    @Body() createTranslationDto: CreateTranslationDto,
+  ): Promise<Translation> {
+    return this.translationService.create(createTranslationDto);
+  }
 }

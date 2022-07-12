@@ -1,5 +1,15 @@
-import {  Controller,Post, Body, UseGuards, Get, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Put,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { isInstance, IS_INSTANCE } from 'class-validator';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from './interfaces/product.interface';
 import { ProductService } from './product.service';
@@ -50,5 +60,4 @@ export class ProductController {
   async detailView(@Param('id') id): Promise<Product> {
     return this.productService.detailView(id);
   }
-
 }

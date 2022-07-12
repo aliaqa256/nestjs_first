@@ -10,9 +10,9 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const auth_module_1 = require("./auth/auth.module");
 const product_module_1 = require("./product/product.module");
-const user_module_1 = require("./user/user.module");
 const mongoose_1 = require("@nestjs/mongoose");
 const category_module_1 = require("./category/category.module");
+const translation_module_1 = require("./translation/translation.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -20,9 +20,11 @@ AppModule = __decorate([
         imports: [
             auth_module_1.AuthModule,
             product_module_1.ProductModule,
-            user_module_1.UserModule,
-            mongoose_1.MongooseModule.forRoot('mongodb://localhost/nest'),
+            mongoose_1.MongooseModule.forRoot('mongodb://localhost/nest', {
+                useNewUrlParser: true,
+            }),
             category_module_1.CategoryModule,
+            translation_module_1.TranslationModule,
         ],
         controllers: [],
         providers: [],

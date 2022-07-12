@@ -14,5 +14,4 @@ export class CategoryController {
   ): Promise<Category> {
     return this.categoryService.create(createCategoryDto);
   }
-  
 }

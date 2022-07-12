@@ -15,7 +15,11 @@ const mongoose_2 = require("mongoose");
 let Category = class Category {
 };
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({
+        type: String,
+        required: true,
+        unique: true,
+    }),
     __metadata("design:type", String)
 ], Category.prototype, "category_name", void 0);
 __decorate([
@@ -23,7 +27,10 @@ __decorate([
     __metadata("design:type", Category)
 ], Category.prototype, "parent", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({
+        type: Boolean,
+        default: false,
+    }),
     __metadata("design:type", Boolean)
 ], Category.prototype, "is_parent", void 0);
 Category = __decorate([

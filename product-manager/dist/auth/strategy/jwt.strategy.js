@@ -26,9 +26,8 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
             username: payload.username,
             is_superuser: payload.is_superuser,
         };
-        if (user_info.is_superuser) {
+        if (!user_info.is_superuser) {
             return payload;
-            ;
         }
     }
 };

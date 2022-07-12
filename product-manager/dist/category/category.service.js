@@ -21,6 +21,12 @@ let CategoryService = class CategoryService {
         this.categoryModel = categoryModel;
     }
     async create(createCategoryDto) {
+        const category = await this.categoryModel.findOne({
+            category_name: createCategoryDto.category_name,
+        });
+        if (category) {
+            throw new common_1.ForbiddenException('Category already exists');
+        }
         const createdCategory = new this.categoryModel(createCategoryDto);
         return createdCategory.save();
     }

@@ -1,7 +1,8 @@
 import { Category } from '../schemas/category.schema';
-
+import { IsEmail, IsNotEmpty } from 'class-validator';
 export class CreateCategoryDto {
-    readonly category_name: string;
-    readonly parent: Category;
-    readonly is_parent: boolean;
+  @IsNotEmpty()
+  readonly category_name: string;
+  readonly parent: Category;
+  readonly is_parent: boolean;
 }

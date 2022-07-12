@@ -5,13 +5,20 @@ export type CategoryDocument = Category & Document;
 
 @Schema()
 export class Category {
-  @Prop()
+  @Prop({
+    type: String,
+    required: true,
+    unique: true,
+  })
   category_name: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Category' })
   parent: Category;
 
-  @Prop()
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
   is_parent: boolean;
 }
 

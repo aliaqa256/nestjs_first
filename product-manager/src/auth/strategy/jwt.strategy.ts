@@ -4,10 +4,10 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor( ) {
+  constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey:'secret',
+      secretOrKey: 'secret',
     });
   }
 
@@ -18,11 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       is_superuser: payload.is_superuser,
     };
 
-    if (user_info.is_superuser) {
-        return payload;; 
+    if (!user_info.is_superuser) {
+      return payload;
     }
-    
   }
-
- 
 }

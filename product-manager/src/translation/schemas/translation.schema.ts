@@ -7,10 +7,10 @@ export type TranslationDocument = Translation & Document;
 @Schema()
 export class Translation {
   @Prop()
-    persian: string;
+  persian: string;
 
-    @Prop()
-    english: string;
+  @Prop()
+  english: string;
 }
 
 export const TranslationSchema = SchemaFactory.createForClass(Translation);

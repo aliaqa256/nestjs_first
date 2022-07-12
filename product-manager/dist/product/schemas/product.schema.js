@@ -16,7 +16,11 @@ const category_schema_1 = require("../../category/schemas/category.schema");
 let Product = class Product {
 };
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({
+        unique: true,
+        type: String,
+        required: true,
+    }),
     __metadata("design:type", String)
 ], Product.prototype, "name", void 0);
 __decorate([
